@@ -1,11 +1,48 @@
 <template>
+ 
     <v-footer app color="primary" dark absolute >
+          
       <v-spacer></v-spacer>
-      <div>&copy; {{ new Date().getFullYear()+''+footer }}</div>
-    </v-footer>
+      <div>&copy; {{ new Date().getFullYear()+''+ footer }}</div>
+    
+        <v-btn icon @click="openDialog"><v-icon>mdi-pencil</v-icon></v-btn>
+       <v-dialog v-model="dialog" max-width="800">
+        <v-card>
+            <v-card-title>
+                제목수정
+                <v-spacer/>
+                 <v-btn @click="save"><v-icon>mdi-content-save</v-icon></v-btn>
+                <v-btn @click="dialog=false"><v-icon>mdi-close</v-icon></v-btn>
+                </v-card-title>
+           <v-card-text>
+                <v-text-field v-model="text" outlined label="제목" @keypress.enter="save" hide-details/>
+            </v-card-text>
+        </v-card>
+       </v-dialog>
+     </v-footer>
 </template>
+
 <script>
+
 export default {
-    props:['footer']
+    
+    props:['footer'],
+     data(){
+        return{
+            dialog:false,
+            text:this.footer
+        }
+        
+        
+    },
+    methods:{
+        openDialog(){
+            this.dialog=true
+        },
+        save(){
+            this.$firebase.database().ref().child('site').update({footer:this.text}) 
+            this.dialog=false
+        }
+    }
 }
 </script>
