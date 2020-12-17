@@ -34,8 +34,11 @@ export default {
             this.dialog=true
         },
         save(){
+            try{
             this.$firebase.database().ref().child('site').update({title:this.text}) 
-            this.dialog=false
+            }finally{
+                this.dialog=false
+            }
         }
     }
 }
