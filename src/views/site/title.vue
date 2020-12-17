@@ -33,9 +33,9 @@ export default {
         openDialog(){
             this.dialog=true
         },
-        save(){
+        async save(){
             try{
-            this.$firebase.database().ref().child('site').update({title:this.text}) 
+             await this.$firebase.database().ref().child('site').update({title:this.text}) 
             }finally{
                 this.dialog=false
             }

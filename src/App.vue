@@ -66,8 +66,8 @@ export default {
           ]
         }
         ],
-      title:'초원세탁소',
-      footer:'푸터'
+      title:this.title,
+      footer:this.footer
       }
     }
   },
