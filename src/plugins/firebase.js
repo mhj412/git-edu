@@ -4,7 +4,9 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firebase-database'
 import firebaseConfig from '../../firebaseConfig'
+import store from '../store/'
 
 firebase.initializeApp(firebaseConfig)
+firebase.auth().onAuthStateChanged((fu)=>store.commit('setFireuser', fu))
 
 Vue.prototype.$firebase = firebase
