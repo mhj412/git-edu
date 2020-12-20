@@ -5,15 +5,14 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    
+    editable:true,
     fireUser: null
-
-  },
+},
   mutations: {
     setEdit(state, edit){
       state.editable=edit
     },
-    setFireUser(state,fu){
+    setFireuser(state,fu){
       state.fireUser=fu
     }
   },

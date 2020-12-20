@@ -35,7 +35,7 @@ export default {
         },
         async save(){
             try{
-             await this.$firebase.database().ref().child('site').update({title:this.text}) 
+             await this.$firebase.database().ref().child('site').update({ title:this.text }) 
             }finally{
                 this.dialog=false
             }
