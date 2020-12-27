@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 <template>
    <v-toolbar-title>
        {{title}}
@@ -10,7 +11,7 @@
                  <v-btn @click="save"><v-icon>mdi-content-save</v-icon></v-btn>
                 <v-btn @click="dialog=false"><v-icon>mdi-close</v-icon></v-btn>
                 </v-card-title>
-                
+
             <v-card-text>
                 <v-text-field v-model="text" outlined label="제목" @keypress.enter="save" hide-details/>
             </v-card-text>
@@ -20,26 +21,24 @@
 </template>
 <script>
 export default {
-    props:['title'],
-    data(){
-        return{
-            dialog:false,
-            text:this.title
-        }
-        
-        
-    },
-    methods:{
-        openDialog(){
-            this.dialog=true
-        },
-        async save(){
-            try{
-             await this.$firebase.database().ref().child('site').update({ title:this.text }) 
-            }finally{
-                this.dialog=false
-            }
-        }
+  props: ['title'],
+  data () {
+    return {
+      dialog: false,
+      text: this.title
     }
+  },
+  methods: {
+    openDialog () {
+      this.dialog = true
+    },
+    async save () {
+      try {
+        await this.$firebase.database().ref().child('site').update({ title: this.text })
+      } finally {
+        this.dialog = false
+      }
+    }
+  }
 }
 </script>

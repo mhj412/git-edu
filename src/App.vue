@@ -5,27 +5,25 @@
       color="primary"
       dark
     >
-      
-    
+
     <v-app-bar-nav-icon @click="drawer=!drawer"/>
     <site-title :title="site.title"></site-title>
     <v-spacer/>
     <site-sign></site-sign>
     </v-app-bar>
     <v-navigation-drawer app v-model="drawer">
-        
+
       <v-divider></v-divider>
       <site-menu :items="site.menu"></site-menu>
-      
+
     </v-navigation-drawer>
     <v-content>
         <router-view/>
     </v-content>
    <site-footer :footer="site.footer"></site-footer>
 
-    
   </v-app>
-  
+
 </template>
 
 <script>
@@ -34,66 +32,61 @@ import SiteFooter from '@/views/site/footer'
 import SiteMenu from '@/views/site/menu'
 import SiteSign from '@/views/site/sign'
 export default {
-  components: {SiteTitle,SiteFooter, SiteMenu, SiteSign},
+  components: { SiteTitle, SiteFooter, SiteMenu, SiteSign },
   name: 'App',
-  data(){
+  data () {
     return {
-      drawer:false,
-      site:{
+      drawer: false,
+      site: {
         menu: [
-            {
-          title: 'home',
-          icon: 'mdi-home',
-          subItems: [
-            {
-              title: 'Dashboard',
-              to: '/'
-            },
-            {
-              title: 'About',
-              to: '/about'
-            }
-          ]
-        },
-        {
-          title: 'about',
-          active: true,
-          icon: 'mdi-account',
-          subItems: [
-            {
-              title: 'xxx',
-              to: '/xxx'
-            }
-          ]
-        }
+          {
+            title: 'home',
+            icon: 'mdi-home',
+            subItems: [
+              {
+                title: 'Dashboard',
+                to: '/'
+              },
+              {
+                title: 'About',
+                to: '/about'
+              }
+            ]
+          },
+          {
+            title: 'about',
+            active: true,
+            icon: 'mdi-account',
+            subItems: [
+              {
+                title: 'xxx',
+                to: '/xxx'
+              }
+            ]
+          }
         ],
-      title:this.title,
-      footer:this.footer
+        title: this.title,
+        footer: this.footer
       }
     }
   },
-  created(){
+  created () {
     this.subscribe()
   },
   methods: {
-    subscribe(){
-        this.$firebase.database().ref().child('site').on('value', (sn) =>{
-        const v =sn.val()
-        if(!v){
+    subscribe () {
+      this.$firebase.database().ref().child('site').on('value', (sn) => {
+        const v = sn.val()
+        if (!v) {
           this.$firebase.database().ref().child('site').set(this.site)
           return
         }
         this.site = v
-        },(e)=>{
-          console.log(e.message)
-
-        })
-
-   
+      }, (e) => {
+        console.log(e.message)
+      })
     }
   }
-
-    
 
 }
 </script>
