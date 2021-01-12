@@ -46,3 +46,13 @@ exports.deleteUser = functions.region(region).auth.user().onDelete(async (user) 
   await rdb.ref('users').child(uid).remove()
   await db.collection('users').doc(uid).delete()
 })
+exports.incrementBoardCount = functions.firestore.document('boards/{bid}').onCreate(async (snap, context) => {
+  try {
+    await db.collection('meta').doc('boards').update('count', admin.firestore.FieldValue.increment(1))
+  } catch (e) {
+    await db.collection('meta').doc('boards').set({ count: 1 })
+  }
+})
+exports.decrementBoardCount = functions.firestore.document('boards/{bid}').onDelete(async (snap, context) => {
+  await db.collection('meta').doc('boards').update('count', admin.firestore.FieldValue.increment(-1))
+})

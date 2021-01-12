@@ -4,6 +4,8 @@
     <v-data-table
       :headers="headers"
       :items="items"
+      :options.sync="options"
+      :server-items-length="serverItemsLength"
     >
       <template v-slot:item.id="{ item }">
         <v-btn icon @click="openDialog(item)"><v-icon>mdi-pencil</v-icon></v-btn>
@@ -11,7 +13,7 @@
       </template>
     </v-data-table>
     <v-card-actions>
-      <v-btn @click="read"><v-icon left>mdi-page-next</v-icon></v-btn>
+      <!-- <v-btn @click="read"><v-icon left>mdi-page-next</v-icon></v-btn> -->
       <v-btn @click="openDialog(null)"><v-icon left>mdi-pencil</v-icon></v-btn>
     </v-card-actions>
     <v-dialog max-width="500" v-model="dialog">
@@ -47,19 +49,35 @@ export default {
       },
       dialog: false,
       selectedItem: null,
-      unsubscribe: null
+      unsubscribe: null,
+      unsubscribeCount: null,
+      serverItemsLength: 0,
+      options: {}
+    }
+  },
+  watch: {
+    options: {
+      handler (n, o) {
+        this.subscribe()
+      },
+      deep: true
     }
   },
   created () {
     // this.read()
-    this.subscribe()
+    // this.subscribe()
   },
   destroyed () {
     if (this.unsubscribe) this.unsubscribe()
+    if (this.unsubscribeCount) this.unsubscribeCount()
   },
   methods: {
     subscribe () {
-      this.unsubscribe = this.$firebase.firestore().collection('boards').onSnapshot((sn) => {
+      this.unsubscribeCount = this.$firebase.firestore().collection('meta').doc('boards').onSnapshot((doc) => {
+        if (!doc.exists) return
+        this.serverItemsLength = doc.data().count
+      })
+      this.unsubscribe = this.$firebase.firestore().collection('boards').limit(this.options.itemsPerPage).onSnapshot((sn) => {
         if (sn.empty) {
           this.items = []
           return
@@ -90,12 +108,12 @@ export default {
     update () {
       this.$firebase.firestore().collection('boards').doc(this.selectedItem.id).update(this.form)
       this.dialog = false
+    },
+
+    remove (item) {
+      this.$firebase.firestore().collection('boards').doc(item.id).delete()
     }
 
-    // console.log(this.items)
-  },
-  remove (item) {
-    this.$firebase.firestore().collection('boards').doc(item.id).delete()
   }
 
 }
